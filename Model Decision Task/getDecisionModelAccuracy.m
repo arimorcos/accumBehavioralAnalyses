@@ -1,4 +1,4 @@
-function [accuracy,traces, correct] = getDecisionModelAccuracy(dataCell,params)
+function [accuracy,decision,correct] = getDecisionModelAccuracy(dataCell,params)
 
 if ~isstruct(params)
     newParams.weightSlope = params(1);
@@ -15,29 +15,31 @@ end
 
 %get mazePatterns
 mazePatterns = getMazePatterns(dataCell);
+uniquePatterns = unique(mazePatterns,'rows');
 
 %get turns
-leftTurns = double(getCellVals(dataCell,'result.leftTurn'));
-leftTurns(leftTurns==0) = -1;
+leftTurns = getCellVals(dataCell,'result.leftTurn');
+prevTurn = getCellVals(dataCell,'result.prevTurn');
 
 %get posBins
 posBins = -50:5:600;
 
-try
-    %loop through each and test
-    correct = false(size(leftTurns));
-    traces = nan(length(dataCell),length(posBins));
-    parfor trial = 1:length(dataCell)
-        [decision,traces(trial,:)] = predictDecision(mazePatterns(trial,:),...
-            params, posBins, dataCell{trial}.result.prevTurn);
-        correct(trial) = decision == leftTurns(trial);
-        
-        %     dispProgress('Testing model: trial %d/%d',trial,trial,length(dataCell));
-    end
+decision = nan(1,length(dataCell));
+for trial = 1:size(uniquePatterns,1)
+    leftVal = predictDecision(uniquePatterns(trial,:),...
+        params, posBins, 1);
+    matchLeft = ismember(mazePatterns,uniquePatterns(trial,:),'rows')' &...
+        prevTurn;
+    decision(matchLeft) = leftVal;
+%     disp(leftVal)
     
-    %get accuracy
-    accuracy = sum(correct)/length(correct);
-catch
-    accuracy = 0;
-    traces = [];
+    rightVal = predictDecision(uniquePatterns(trial,:),...
+        params, posBins, 0);
+    matchRight = ismember(mazePatterns,uniquePatterns(trial,:),'rows')' &...
+        ~prevTurn;
+    decision(matchRight) = rightVal;
 end
+
+rectDecision = round(decision);
+correct = leftTurns == rectDecision;
+accuracy = sum(correct)/length(rectDecision);

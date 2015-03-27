@@ -1,4 +1,4 @@
-function params = processDecisionModelOrchOutput(path)
+function params = processDecisionModelOrchOutput(path, nVar)
 %processDecisionModelOrchOutput.m Processes output of decision model 
 %
 %INPUTS
@@ -9,11 +9,17 @@ function params = processDecisionModelOrchOutput(path)
 %
 %ASM 3/15
 
+if nargin < 2 || isempty(nVar)
+    nVar = 9;
+end
+
 %open file
 fid = fopen(path);
 
 %read in data
-C = textscan(fid,'%f, %f, %f, %f, %f, %f, %f, %f, %f','Delimiter','\n');
+string = repmat('%f, ', 1, nVar);
+string = string(1:end-2);
+C = textscan(fid,string,'Delimiter','\n');
 
 %convert to matrix
 params = cat(2, C{:});

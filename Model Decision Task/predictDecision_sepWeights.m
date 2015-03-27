@@ -1,4 +1,4 @@
-function [decision, tracePDF] = predictDecision(mazePattern, params, yPosBins, prevTurn, segRange)
+function [decision, tracePDF] = predictDecision_sepWeights(mazePattern, params, yPosBins, prevTurn, segRange)
 %predictDecsision.m Predicts a mouse's decision using a drift-diffusion
 %model given a maze-pattern and the input parameters
 %
@@ -60,12 +60,12 @@ sNoisePDF = pdf(normDist_s,xVals)'*xStep;
 % weightFac = y(round(linspace(1,nSeg*weightingScale,nSeg)));
 % weightFac = 1./exp((1:nSeg)/params.expScale);
 % weightFac = weightFac/sum(weightFac); %normalize to 0 and 1
-weightFac = params.weightSlope*(1:nSeg) + params.weightOffset;
-if any(weightFac < 0)
-    weightFac = weightFac + abs(min(weightFac));
-end
+% weightFac = params.weightSlope*(1:nSeg) + params.weightOffset;
+% if any(weightFac < 0)
+    % weightFac = weightFac + abs(min(weightFac));
+% end
 % weightFac = weightFac/sum(weightFac);
-% weightFac = params.weightFac;
+weightFac = params.weightFac;
 
 %get nBins
 nSpatialBins = length(yPosBins);

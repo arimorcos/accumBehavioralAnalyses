@@ -1,8 +1,18 @@
-function searchOut = runDecisionTaskOrchestra(trainData, saveFile)
+function searchOut = runDecisionTaskOrchestra(dataLoc)
 
 fprintf('Entered matlab\n');
 
+%load train data
+fprintf('Loading trainData...');
+load(dataLoc,'trainData');
+fprintf('Complete\n');
+
+%get job number 
+% lsfid = str2num(getenv('LSB_JOBINDEX'));
+saveFileTXT = '/home/asm27/decisionTaskOut/decisionTaskFit.txt';
+
 %get seed
+rng(sum(100*clock));
 seed = [randn ...%weight slope
     0.5*randn ... %weight offset
     randn ... %bias_mu
@@ -15,15 +25,17 @@ seed = [randn ...%weight slope
     ];
 
 %run fminsearch
-% searchOut = fminsearch(@(x) 1-getDecisionModelAccuracy(trainData, x),...
-%     seed);
-
-searchOut = seed;
+fprintf('Getting minimum...\n');
+options.Display = 'iter';
+searchOut = fminsearch(@(x) getDecisionModelLogLikelihood(trainData, x),...
+     seed, options);
+%searchOut = seed;
+fprintf('Complete\n');
 
 %save to text
-fprintf('this is the saveFile: %s\n',saveFile);
-fid = fopen(saveFile,'w+');
-fprintf(fid,'%d %d %d %d %d %d %d %d %d\n',searchOut);
+fprintf('this is the saveFile: %s\n',saveFileTXT);
+fid = fopen(saveFileTXT,'a+');
+fprintf(fid,'%d, %d, %d, %d, %d, %d, %d, %d, %d\n',searchOut);
 fclose(fid);
 
 end
