@@ -1,4 +1,4 @@
-function [decision, tracePDF] = predictDecision(mazePattern, params, yPosBins, prevTurn, segRange)
+function [decision, tracePDF, xVals] = predictDecision(mazePattern, params, yPosBins, prevTurn, segRange)
 %predictDecsision.m Predicts a mouse's decision using a drift-diffusion
 %model given a maze-pattern and the input parameters
 %
@@ -21,6 +21,8 @@ function [decision, tracePDF] = predictDecision(mazePattern, params, yPosBins, p
 %
 %ASM 2/15
 
+params.noise_a = .3;
+
 if nargin < 5 || isempty(segRange)
     segRange = 0:80:400;
 end
@@ -36,7 +38,7 @@ prevTurn(prevTurn==0) = -1;
 
 %create distribution
 normDist_a = makedist('Normal','sigma',params.noise_a);
-normDist_s = makedist('Normal','sigma',params.noise_s);
+% normDist_s = makedist('Normal','sigma',params.noise_s);
 normDist_pos_lambda = makedist('Normal','sigma',params.noise_a,'mu',log2(params.lambda));
 normDist_neg_lambda = makedist('Normal','sigma',params.noise_a,'mu',log2(params.lambda));
 normDist_bias = makedist('Normal','sigma',params.bias_sigma,'mu',params.bias_mu + ...
@@ -51,7 +53,7 @@ xStep = mean(diff(xVals));
 posLambdaPDF = pdf(normDist_pos_lambda,xVals)'*xStep;
 negLambdaPDF = pdf(normDist_neg_lambda,xVals)'*xStep;
 aNoisePDF = pdf(normDist_a,xVals)'*xStep;
-sNoisePDF = pdf(normDist_s,xVals)'*xStep;
+% sNoisePDF = pdf(normDist_s,xVals)'*xStep;
 
 %generate primacy function
 % weightingScale = 1e2;
@@ -64,7 +66,8 @@ weightFac = params.weightSlope*(1:nSeg) + params.weightOffset;
 if any(weightFac < 0)
     weightFac = weightFac + abs(min(weightFac));
 end
-% weightFac = weightFac/sum(weightFac);
+weightFac = weightFac/sum(weightFac);
+weightFac = weightFac*params.weightScale;
 % weightFac = params.weightFac;
 
 %get nBins
@@ -110,7 +113,7 @@ for binInd = 2:nSpatialBins
             mazePattern(currSeg)*weightFac(currSeg), 0.01)'*xStep);
         
         %add noise
-        tempPDF = combinePDFsFFT(tempPDF,sNoisePDF);
+%         tempPDF = combinePDFsFFT(tempPDF,sNoisePDF);
         
         %increment current segment
         currSeg = min(currSeg + 1,nSeg);

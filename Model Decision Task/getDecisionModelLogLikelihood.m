@@ -3,13 +3,15 @@ function [logLikelihood] = getDecisionModelLogLikelihood(dataCell,params)
 if ~isstruct(params)
     newParams.weightSlope = params(1);
     newParams.weightOffset = params(2);
+	% newParams.weightFac = params(1:6);
     newParams.bias_mu = params(3);
     newParams.bias_sigma = params(4);
-    newParams.noise_s = params(5);
-    newParams.noise_a = params(6);
-    newParams.lambda = params(7);
-    newParams.boundDist = params(8);
-    newParams.prevTurnWeight = params(9);
+%     newParams.noise_s = params(5);
+%     newParams.noise_a = params(6);
+    newParams.lambda = params(5);
+    newParams.boundDist = params(6);
+    newParams.prevTurnWeight = params(7);
+    newParams.weightScale = params(8);
     params = newParams;
 end
 
