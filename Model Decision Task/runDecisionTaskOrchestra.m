@@ -48,7 +48,7 @@ fprintf('Complete\n');
 %save to text
 fprintf('this is the saveFile: %s\n',saveFileTXT);
 fid = fopen(saveFileTXT,'a+');
-fprintf(fid,'%d, %d, %d, %d, %d, %d, %d, %d, %d\n',searchOut);
+fprintf(fid,'%d, %d, %d, %d, %d, %d, %d, %d\n',searchOut);
 fclose(fid);
 
 end

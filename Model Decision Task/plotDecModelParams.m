@@ -1,6 +1,6 @@
 function plotDecModelParams(goodParams)
-names = {'weightSlope','weightOffset','bias_{mu}','bias_{sigma}','noise_s',...
-    'noise_a','lambda','boundDist','prevTurnWeight'};
+names = {'weightSlope','weightOffset','bias_{mu}','bias_{sigma}',...
+    'lambda','boundDist','prevTurnWeight','weightScale'};
 
 % create figure
 figure;
@@ -13,7 +13,7 @@ xVals = repmat(1:size(goodParams,2),size(goodParams,1),1);
 
 % create plot 
 scatH = scatter(xVals(:), goodParams(:));
-meanH = scatter(1:9, meanVals);
+meanH = scatter(1:size(goodParams,2), meanVals);
 meanH.Marker = '+';
 meanH.SizeData = 120;
 meanH.MarkerEdgeColor = 'k';
