@@ -197,7 +197,7 @@ if flagWhite
     ylabel('Percent Turns Toward White');
     xlabel('Number of White Dot Segments');
 else
-    leftSTD = nanstd(percLeft);
+    leftSTD = calcSEM(percLeft);
     
     if indLines
         
