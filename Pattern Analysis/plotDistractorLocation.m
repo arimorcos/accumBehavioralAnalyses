@@ -50,13 +50,13 @@ errLocations = (1-mean(errPatterns))*100;
 corrLocations = (1-mean(corrPatterns))*100;
 
 %plot
-handles.corrPlot = plot(1:size(mazePatterns,2),corrLocations,'b-o','MarkerSize',20,'MarkerFaceColor','b','LineWidth',2);
+handles.corrPlot = plot(1:length(corrLocations),corrLocations,'b-o','MarkerSize',20,'MarkerFaceColor','b','LineWidth',2);
 hold on;
-handles.errPlot = plot(1:size(mazePatterns,2),errLocations,'r-x','MarkerSize',20,'LineWidth',2);
+handles.errPlot = plot(1:length(corrLocations),errLocations,'r-x','MarkerSize',20,'LineWidth',2);
 legend([handles.corrPlot(1),handles.errPlot(1)],{'Correct Trials','Error Trials'},'Location','NorthEast');
-set(gca,'XTick',1:size(mazePatterns,2));
+set(gca,'XTick',1:length(corrLocations));
 xlabel('Segment #','FontSize',30);
-xlim([0.5 size(mazePatterns,2)+.5]);
+xlim([0.5 length(corrLocations)+.5]);
 ylabel('Percent Trials with Minority Segment Present','FontSize',30);
 set(gca,'FontSize',20);
 axis square;
