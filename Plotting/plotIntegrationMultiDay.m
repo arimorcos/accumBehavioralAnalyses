@@ -19,6 +19,8 @@ function [figH,axH] = plotIntegrationMultiDay(indDataCells,figH,axH,colorToPlot,
 %
 %ASM 7/14
 
+marker = 'o';
+
 %check for axes inputs
 if nargin < 8 || isempty(indLines)
     indLines = false;
@@ -164,7 +166,7 @@ if flagWhite
                 xVals = xVals + 0.1*randn(size(xVals));
             end
             
-            plot(xVals,percWhite(i,:),'o','LineStyle','none','MarkerFaceColor',grayColors(i,:),...
+            plot(xVals,percWhite(i,:),marker,'LineStyle','none','MarkerFaceColor',grayColors(i,:),...
                 'MarkerEdgeColor',grayColors(i,:),'MarkerSize',markSize);
             if shouldFit
 %                 b = glmfit(0:numSeg,[numWhite(i,:)' numTrials(i,:)'],'binomial','link','probit');
@@ -175,7 +177,7 @@ if flagWhite
                 set(get(get(plotH,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
             end
         end
-        plot(xVals,nanmean(percWhite),'o','LineStyle','none','MarkerFaceColor',colorToPlot,...
+        plot(xVals,nanmean(percWhite),marker,'LineStyle','none','MarkerFaceColor',colorToPlot,...
             'MarkerEdgeColor',colorToPlot,'MarkerSize',markSize);
         if shouldFit
 %             b = glmfit(0:numSeg,[mean(numWhite)' mean(numTrials)'],'binomial','link','probit');
@@ -186,11 +188,11 @@ if flagWhite
         end
     else
         if length(indDataCells) > 1
-            errorbar(xVals,nanmean(percWhite),whiteSTD,'o','LineStyle','none',...
+            errorbar(xVals,nanmean(percWhite),whiteSTD,marker,'LineStyle','none',...
                 'MarkerFaceColor',colorToPlot,'MarkerEdgeColor',colorToPlot,'LineWidth',1.4,...
                 'Color',colorToPlot);
         else
-            plot(xVals,percLeft,'o','LineStyle','none','MarkerFaceColor',colorToPlot,...
+            plot(xVals,percLeft,marker,'LineStyle','none','MarkerFaceColor',colorToPlot,...
                 'MarkerEdgeColor',colorToPlot);
         end
     end
@@ -210,7 +212,7 @@ else
                 xVals = xVals + 0.1*randn(size(xVals));
             end
             
-            plot(xVals,percLeft(i,:),'o','LineStyle','none','MarkerFaceColor',grayColors(i,:),...
+            plot(xVals,percLeft(i,:),marker,'LineStyle','none','MarkerFaceColor',grayColors(i,:),...
                 'MarkerEdgeColor',grayColors(i,:),'MarkerSize',markSize);
             if shouldFit
 %                 b = glmfit(0:numSeg,[numLeft(i,:)' numTrials(i,:)'],'binomial','link','probit');
@@ -220,7 +222,7 @@ else
                 set(get(get(plotH,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
             end
         end
-        plot(xVals,nanmean(percLeft),'o','LineStyle','none','MarkerFaceColor',colorToPlot,...
+        plot(xVals,nanmean(percLeft),marker,'LineStyle','none','MarkerFaceColor',colorToPlot,...
             'MarkerEdgeColor',colorToPlot,'MarkerSize',markSize);
         if shouldFit
 %             b = glmfit(0:numSeg,[mean(numLeft)' mean(numTrials)'],'binomial','link','probit');
@@ -231,11 +233,11 @@ else
         end
     else
         if length(indDataCells) > 1
-            errorbar(xVals,nanmean(percLeft),leftSTD,'o','LineStyle','none',...
+            errorbar(xVals,nanmean(percLeft),leftSTD,marker,'LineStyle','none',...
                 'MarkerFaceColor',colorToPlot,'MarkerEdgeColor',colorToPlot,'LineWidth',1.4,...
                 'Color',colorToPlot);
         else
-            plot(xVals,percLeft,'o','LineStyle','none','MarkerFaceColor',colorToPlot,...
+            plot(xVals,percLeft,marker,'LineStyle','none','MarkerFaceColor',colorToPlot,...
                 'MarkerEdgeColor',colorToPlot);
         end
     end
@@ -252,10 +254,10 @@ axis square;
 if shouldFit && ~indLines
     hold on;
     if flagWhite
-        [alpha,beta,xValsFit,yValsFit] = fitLogisticPAL(0:numSeg,mean(numWhite),mean(numTrials));
+        [~,~,xValsFit,yValsFit] = fitLogisticPAL(0:numSeg,mean(numWhite),mean(numTrials));
 %         b = glmfit(0:numSeg,[mean(numWhite)' mean(numTrials)'],'binomial','link','probit');
     else
-        [alpha,beta,xValsFit,yValsFit] = fitLogisticPAL(0:numSeg,mean(numLeft),mean(numTrials));
+        [~,~,xValsFit,yValsFit] = fitLogisticPAL(0:numSeg,mean(numLeft, 1),mean(numTrials, 1));
 %         b = glmfit(0:numSeg,[mean(numLeft)' mean(numTrials)'],'binomial','link','probit');
     end
 %     yfit = glmval(b,0:0.001:numSeg,'probit');
