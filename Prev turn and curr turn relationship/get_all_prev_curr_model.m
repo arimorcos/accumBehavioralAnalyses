@@ -1,5 +1,5 @@
 %saveFolder
-saveFolder = '/Users/arimorcos/Data/Analyzed Data/160207_vogel_prev_curr_model';
+saveFolder = '/Users/arimorcos/Data/Analyzed Data/160312_vogel_new_prev_curr_model';
 
 %get list of datasets
 procList = getProcessedList();

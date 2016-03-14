@@ -24,7 +24,7 @@ if nargin < 2 || isempty(trainFrac)
 end
 
 verbose = false;
-shouldPlot = true;
+shouldPlot = false;
 
 %% get behavior in each condition
 nSeg = 6;

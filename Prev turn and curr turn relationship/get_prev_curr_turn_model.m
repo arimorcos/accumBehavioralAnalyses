@@ -9,4 +9,5 @@ curr_turn = getCellVals(dataCell, 'result.leftTurn');
 tbl = table(prev_turn', prev_reward', curr_turn');
 
 % create model 
-model = fitlm(tbl);
+% model = fitlm(tbl);
+model = fitglm(tbl, 'interactions', 'Distribution', 'binomial');
